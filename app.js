@@ -9,6 +9,137 @@ app.listen(4000, () => {
 });
 
 app.use(cors());
+const employeeDetails = [
+    {
+    "id": 1,
+   "Name": "Jeff",
+   "Zip": "55422",
+   "Age": 54,
+   "Pay": 9587.23,
+   "DepartmentId": 1,
+   "GetTaxForm": "1099"
+   },
+   
+   {
+    "id": 2,
+   "Name": "Dave",
+   "Zip": "03456",
+   "Age": 41,
+   "Pay": 8547.55,
+   "DepartmentId": 1,
+   "GetTaxForm": "W2"
+   },
+   
+   {
+    "id": 3,
+   "Name": "Amber",
+   "Zip": "41908",
+   "Age": 35,
+   "Pay": 4878.1,
+   "DepartmentId": 2,
+   "GetTaxForm": "W2"
+   },
+   
+   {
+    "id": 4,
+   "Name": "Cassie",
+   "Zip": "91820",
+   "Age": 28,
+   "Pay": 4500,
+   "DepartmentId": 1,
+   "GetTaxForm": "1099"
+   },
+   
+   {
+    "id": 5,
+   "Name": "Albert",
+   "Zip": "54321",
+   "Age": 39,
+   "Pay": 5874.09,
+   "DepartmentId": 2,
+   "GetTaxForm": "1099"
+   }
+   ]
+
+app.get('/foodMenu',(request, response) => {
+    const menu = [
+        {
+          id: 1,
+          title: 'buttermilk pancakes',
+          category: 'breakfast',
+          price: 15.99,
+          img: './images/item-1.jpeg',
+          desc: `I'm baby woke mlkshk wolf bitters live-edge blue bottle, hammock freegan copper mug whatever cold-pressed `,
+        },
+        {
+          id: 2,
+          title: 'diner double',
+          category: 'dinner',
+          price: 13.99,
+          img: './images/item-2.jpeg',
+          desc: `vaporware iPhone mumblecore selvage raw denim slow-carb leggings gochujang helvetica man braid jianbing. Marfa thundercats `,
+        },
+        {
+          id: 3,
+          title: 'godzilla milkshake',
+          category: 'shakes',
+          price: 6.99,
+          img: './images/item-3.jpeg',
+          desc: `ombucha chillwave fanny pack 3 wolf moon street art photo booth before they sold out organic viral.`,
+        },
+        {
+          id: 4,
+          title: 'country delight',
+          category: 'breakfast',
+          price: 20.99,
+          img: './images/item-4.jpeg',
+          desc: `Shabby chic keffiyeh neutra snackwave pork belly shoreditch. Prism austin mlkshk truffaut, `,
+        },
+        {
+          id: 5,
+          title: 'egg attack',
+          category: 'lunch',
+          price: 22.99,
+          img: './images/item-5.jpeg',
+          desc: `franzen vegan pabst bicycle rights kickstarter pinterest meditation farm-to-table 90's pop-up `,
+        },
+        {
+          id: 6,
+          title: 'oreo dream',
+          category: 'shakes',
+          price: 18.99,
+          img: './images/item-6.jpeg',
+          desc: `Portland chicharrones ethical edison bulb, palo santo craft beer chia heirloom iPhone everyday`,
+        },
+        {
+          id: 7,
+          title: 'bacon overflow',
+          category: 'breakfast',
+          price: 8.99,
+          img: './images/item-7.jpeg',
+          desc: `carry jianbing normcore freegan. Viral single-origin coffee live-edge, pork belly cloud bread iceland put a bird `,
+        },
+        {
+          id: 8,
+          title: 'american classic',
+          category: 'lunch',
+          price: 12.99,
+          img: './images/item-8.jpeg',
+          desc: `on it tumblr kickstarter thundercats migas everyday carry squid palo santo leggings. Food truck truffaut  `,
+        },
+        {
+          id: 9,
+          title: 'quarantine buddy',
+          category: 'shakes',
+          price: 16.99,
+          img: './images/item-9.jpeg',
+          desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
+        },
+      ];
+    
+      response.send(menu);
+      
+})
 
 app.get('/foodList', (request, response) => {
     const foodInfo = [
@@ -57,51 +188,52 @@ app.get('/foodList', (request, response) => {
 
 
 app.get('/employeeDetails',(request, response) => {
-const employeeDetails = [
-    {
-   "Name": "Jeff",
-   "Zip": "55422",
-   "Age": 54,
-   "Pay": 9587.23,
-   "DepartmentId": 1,
-   "GetTaxForm": "1099"
-   },
-   
-   {
-   "Name": "Dave",
-   "Zip": "03456",
-   "Age": 41,
-   "Pay": 8547.55,
-   "DepartmentId": 1,
-   "GetTaxForm": "W2"
-   },
-   
-   {
-   "Name": "Amber",
-   "Zip": "41908",
-   "Age": 35,
-   "Pay": 4878.1,
-   "DepartmentId": 2,
-   "GetTaxForm": "W2"
-   },
-   
-   {
-   "Name": "Cassie",
-   "Zip": "91820",
-   "Age": 28,
-   "Pay": 4500,
-   "DepartmentId": 1,
-   "GetTaxForm": "1099"
-   },
-   
-   {
-   "Name": "Albert",
-   "Zip": "54321",
-   "Age": 39,
-   "Pay": 5874.09,
-   "DepartmentId": 2,
-   "GetTaxForm": "1099"
-   }
-   ]
    response.send(employeeDetails);
 })
+
+app.get('/employeeDetails/:id', (request, response) => {
+    const empId = Number(request.params.id);
+    const getEmployee = employeeDetails.find((emp) => emp.id === empId);
+  
+    if (!getEmployee) {
+      response.status(500).send('Employee not found.')
+    } else {
+      response.json(getEmployee);
+    }
+  });
+
+  app.post('/employeeDetails', (request, response) => {
+    const incomingEmployee = request.body;
+  
+    employeeDetails.push(incomingEmployee);
+  
+    response.json(employeeDetails);
+  })
+
+  app.put('/employeeDetails/:id', (request, response) => {
+    const employeeId = Number(request.params.id);
+    const body = request.body;
+    const employee = employeeDetails.find((emp) => emp.id === employeeId);
+    const index = employeeDetails.indexOf(employeeId);
+  
+    if (!employee) {
+      response.status(500).send('Account not found.');
+    } else {
+      const updatedEmployee = { ...employee, ...body };
+  
+      employeeDetails[index] = updatedEmployee;
+  
+      response.send(employeeDetails);
+    }
+  });
+
+  app.delete('/employeeDetails/:id', (request, response) => {
+    const empId = Number(request.params.id);
+    const employeeList = employeeDetails.filter((emp) => emp.id != empId);
+  
+    if (!employeeList) {
+      response.status(500).send('Account not found.');
+    } else {
+      response.send(employeeList);
+    }
+  });
